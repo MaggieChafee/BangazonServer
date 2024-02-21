@@ -1,0 +1,6 @@
+@BangazonServer_HostAddress = http://localhost:5154
+
+GET {{BangazonServer_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
