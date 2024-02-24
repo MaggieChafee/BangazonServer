@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using BangazonServer.Models;
+using Microsoft.Extensions.Options;
 
     public class BangazonServerDbContext : DbContext
     {
@@ -11,10 +12,15 @@ using BangazonServer.Models;
 
         public BangazonServerDbContext(DbContextOptions<BangazonServerDbContext> context) : base(context) 
         {
-
+            
         }
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.EnableSensitiveDataLogging();
+    }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            
             modelBuilder.Entity<User>().HasData(new User[]
             {
                 new User {Id = 1, Uid = "judi73nv90p89", Username = "magsbags", FirstName = "Maggie", LastName = "Chafee", Email = "myemail@gmail.com", IsVendor = false},
@@ -44,7 +50,7 @@ using BangazonServer.Models;
                 new Product {Id = 2, Name = "Orchid Charcoal Drawing", Description = "It is a charcoal drawing of a flower.", Price = 150.00M, IsAvailable = true, DateCreated = new DateTime(2024, 1, 1), CategoryId = 1, VendorId = 3},
                 new Product {Id = 3, Name = "Teacup Felt Embroidery", Description = "Embroidered Teacup", Price = 50.00M, IsAvailable = false, DateCreated = new DateTime(2024, 1, 15), CategoryId = 2, VendorId = 2},
                 new Product {Id = 4, Name = "Custom Denim Jacket Embroidery", Description = "Choose Your Own Adventure", Price = 100.00M, IsAvailable = true, DateCreated = new DateTime(2024, 1, 21), CategoryId = 2, VendorId = 2},
-                new Product {Id = 3, Name = "Iris Charcoal Drawing", Description = "A charcoal drawing of an iris.", Price = 100.00M, IsAvailable = false, DateCreated = new DateTime(2024, 1, 31), CategoryId = 1, VendorId = 3}
+                new Product {Id = 5, Name = "Iris Charcoal Drawing", Description = "A charcoal drawing of an iris.", Price = 100.00M, IsAvailable = false, DateCreated = new DateTime(2024, 1, 31), CategoryId = 1, VendorId = 3}
             });
 
             modelBuilder.Entity<Order>().HasData(new Order[]
