@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using BangazonServer.Models;
 
-namespace BangazonServer
-{
     public class BangazonServerDbContext : DbContext
     {
         public DbSet<User> Users { get; set; }
@@ -31,13 +29,34 @@ namespace BangazonServer
                 new Category {Id = 3, Name = "Gifts"}
             });
 
+            modelBuilder.Entity<PaymentType>().HasData(new PaymentType[]
+            {
+                new PaymentType {Id = 1, Name = "Visa"},
+                new PaymentType {Id = 2, Name = "MasterCard"},
+                new PaymentType {Id = 3, Name = "Amex"},
+                new PaymentType {Id = 4, Name = "Paypal"},
+                new PaymentType {Id = 5, Name = "Discover"}
+            });
+
             modelBuilder.Entity<Product>().HasData(new Product[]
             {
-                new Product {Id = 1, Name = "Seascape Painting", Description = "It is a painting of the sea.", Price = 250.00M, IsAvailable = true, DateCreated = new DateTime(2024, 2, 1), CategoryId = 1, VendorId = 3}
-                new Product {Id = 2, Name = "Seascape Painting", Description = "It is a painting of the sea.", Price = 250.00M, IsAvailable = true, DateCreated = new DateTime(2024, 2, 1), CategoryId = 1, VendorId = 3}
+                new Product {Id = 1, Name = "Seascape Painting", Description = "It is a painting of the sea.", Price = 250.00M, IsAvailable = true, DateCreated = new DateTime(2024, 2, 1), CategoryId = 1, VendorId = 3},
+                new Product {Id = 2, Name = "Orchid Charcoal Drawing", Description = "It is a charcoal drawing of a flower.", Price = 150.00M, IsAvailable = true, DateCreated = new DateTime(2024, 1, 1), CategoryId = 1, VendorId = 3},
+                new Product {Id = 3, Name = "Teacup Felt Embroidery", Description = "Embroidered Teacup", Price = 50.00M, IsAvailable = false, DateCreated = new DateTime(2024, 1, 15), CategoryId = 2, VendorId = 2},
+                new Product {Id = 4, Name = "Custom Denim Jacket Embroidery", Description = "Choose Your Own Adventure", Price = 100.00M, IsAvailable = true, DateCreated = new DateTime(2024, 1, 21), CategoryId = 2, VendorId = 2},
+                new Product {Id = 3, Name = "Iris Charcoal Drawing", Description = "A charcoal drawing of an iris.", Price = 100.00M, IsAvailable = false, DateCreated = new DateTime(2024, 1, 31), CategoryId = 1, VendorId = 3}
+            });
+
+            modelBuilder.Entity<Order>().HasData(new Order[]
+            {
+                new Order {Id = 1, PaymentTypeId = 2, CustomerId = 1, IsCompleted = true, DateCreated=new DateTime(2024, 2, 13), ShippingRequired = false},
+                new Order {Id = 2, PaymentTypeId = 3, CustomerId = 2, IsCompleted = true, DateCreated=new DateTime(2024, 2, 13), ShippingRequired = false},
+                new Order {Id = 3, PaymentTypeId = 1, CustomerId = 1, IsCompleted = true, DateCreated=new DateTime(2024, 2, 13), ShippingRequired = false},
+                new Order {Id = 4, PaymentTypeId = 5, CustomerId = 1, IsCompleted = true, DateCreated=new DateTime(2024, 2, 13), ShippingRequired = false},
+                new Order {Id = 5, PaymentTypeId = 4, CustomerId = 1, IsCompleted = true, DateCreated=new DateTime(2024, 2, 13), ShippingRequired = false},
             });
         }
     }
-}
+
 
 

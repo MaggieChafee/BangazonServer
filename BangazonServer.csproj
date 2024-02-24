@@ -9,11 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include=".github\PULL_REQUEST_TEMPLATE.md" />
-    <Compile Include=".github\ISSUE_TEMPLATE.md" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
