@@ -162,5 +162,21 @@ app.MapPost("api/orders/add-product", (BangazonServerDbContext db, OrderProductD
         return Results.Ok();
 });
 
+// DELETE Product from Order
+app.MapDelete("api/orders/{orderId}/delete-product/{productId}", (BangazonServerDbContext db, int orderId, int productId) =>
+{
+    var currentOrder = db.Orders.Include(o => o.Products).SingleOrDefault(o => o.Id == orderId);
+
+    var removeProduct = db.Products.SingleOrDefault(p => p.Id == productId);
+
+    if (currentOrder == null)
+    {
+        return Results.BadRequest();
+    }
+    currentOrder.Products.Remove(removeProduct);
+    db.SaveChanges();
+    return Results.Ok();
+});
+
 app.Run();
 
