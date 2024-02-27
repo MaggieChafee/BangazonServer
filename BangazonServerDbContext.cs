@@ -55,13 +55,13 @@ using Microsoft.Extensions.Options;
 
             modelBuilder.Entity<Order>().HasData(new Order[]
             {
-                new Order {Id = 1, PaymentTypeId = 2, CustomerId = 1, IsCompleted = true, DateCreated=new DateTime(2024, 2, 13), ShippingRequired = false},
-                new Order {Id = 2, PaymentTypeId = 3, CustomerId = 2, IsCompleted = true, DateCreated=new DateTime(2024, 2, 13), ShippingRequired = false},
-                new Order {Id = 3, PaymentTypeId = 1, CustomerId = 1, IsCompleted = true, DateCreated=new DateTime(2024, 2, 13), ShippingRequired = false},
-                new Order {Id = 4, PaymentTypeId = 5, CustomerId = 1, IsCompleted = true, DateCreated=new DateTime(2024, 2, 13), ShippingRequired = false},
-                new Order {Id = 5, PaymentTypeId = 4, CustomerId = 1, IsCompleted = true, DateCreated=new DateTime(2024, 2, 13), ShippingRequired = false},
+                new Order {Id = 1, PaymentTypeId = 2, CustomerId = 1, IsCompleted = true, DateCreated=new DateTime(2024, 2, 10), ShippingRequired = true},
+                new Order {Id = 2, PaymentTypeId = 3, CustomerId = 2, IsCompleted = false, DateCreated=new DateTime(2024, 2, 12), ShippingRequired = false},
+                new Order {Id = 3, PaymentTypeId = 1, CustomerId = 1, IsCompleted = true, DateCreated=new DateTime(2024, 2, 1), ShippingRequired = false},
+                new Order {Id = 4, PaymentTypeId = 5, CustomerId = 3, IsCompleted = false, DateCreated=new DateTime(2024, 2, 4), ShippingRequired = true},          
             });
-        }
+
+    }
     }
 
 
