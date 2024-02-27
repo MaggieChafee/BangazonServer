@@ -2,6 +2,7 @@ using BangazonServer.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Http.Json;
+using BangazonServer.DTO;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -89,7 +90,7 @@ app.MapGet("api/customers/{customerId}/openOrders", (BangazonServerDbContext db,
     return Results.Ok(openOrder);
 });
 // GET Customer Orders
-app.MapGet("api/user/{userId}/orderhistory", (BangazonServerDbContext db, int userId) =>
+app.MapGet("api/user/{userId}/order-history", (BangazonServerDbContext db, int userId) =>
 {
     List<Order> orders = db.Orders
     .Include(o => o.Products)
@@ -103,12 +104,10 @@ app.MapGet("api/user/{userId}/orderhistory", (BangazonServerDbContext db, int us
     return Results.Ok(orders);
 });
 // GET Vendor Orders
-app.MapGet("api/user/{userId}/vendor-orders", (BangazonServerDbContext db, int userId) =>
+app.MapGet("api/user/{vendorId}/vendor-orders", (BangazonServerDbContext db, int vendorId) =>
 {
-    List<Order> orders = db.Orders
-    .Include(o => o.Products)
-    .Where(o => o.CustomerId == userId && o.IsCompleted == true)
-    .ToList();
+
+    List<Product> orders = db.Products.Include(o => o.Orders).ThenInclude(o => o.Customer).Where(p => p.VendorId == vendorId && p.Orders.Any(o => o.IsCompleted)).ToList();
 
     if (orders == null)
     {
@@ -145,6 +144,22 @@ app.MapPut("api/orders/{orderId}", (BangazonServerDbContext db, Order order, int
 
     db.SaveChanges();
     return Results.Ok();
+});
+
+// ADD Product to Order
+app.MapPost("api/orders/add-product", (BangazonServerDbContext db, OrderProductDto orderProduct) =>
+{ 
+        var currentOrder = db.Orders.Include(o => o.Products).SingleOrDefault(o => o.Id == orderProduct.OrderId && o.IsCompleted == false);
+
+        var addProduct = db.Products.SingleOrDefault(p => p.Id == orderProduct.ProductId);
+
+        if (currentOrder == null)
+        {
+            return Results.BadRequest();
+        }
+        currentOrder.Products.Add(addProduct);
+        db.SaveChanges();
+        return Results.Ok();
 });
 
 app.Run();
