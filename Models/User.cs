@@ -14,7 +14,7 @@ namespace BangazonServer.Models
         public string LastName { get; set; }
         [Required]
         public string Email { get; set; }
-        public List<Product> Products { get; set; }
+        public ICollection<Product> Products { get; set; }
         public bool IsVendor { get; set; }
     }
 }

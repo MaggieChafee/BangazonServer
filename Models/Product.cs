@@ -15,6 +15,6 @@ namespace BangazonServer.Models
         public User Vendor { get; set; }
         public int CategoryId { get; set; }
         public List<Category> Category { get; set; }
-        public ICollection<Order> Orders { get; set; }
+        public ICollection<Order> Orders { get; set;}
     }
 }

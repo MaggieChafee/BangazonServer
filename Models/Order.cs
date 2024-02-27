@@ -9,6 +9,6 @@
         public User Customer { get; set; }
         public DateTime DateCreated { get; set; }
         public bool ShippingRequired { get; set; }
-        public ICollection<Order> Products { get; set; }
+        public ICollection<Product> Products { get; set; }
     }
 }

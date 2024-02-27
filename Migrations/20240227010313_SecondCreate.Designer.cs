@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -10,9 +11,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BangazonServer.Migrations
 {
     [DbContext(typeof(BangazonServerDbContext))]
-    partial class BangazonServerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240227010313_SecondCreate")]
+    partial class SecondCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -128,6 +130,57 @@ namespace BangazonServer.Migrations
                         });
                 });
 
+            modelBuilder.Entity("BangazonServer.Models.OrderProduct", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OrderProduct");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            OrderId = 1,
+                            ProductId = 2
+                        },
+                        new
+                        {
+                            Id = 2,
+                            OrderId = 1,
+                            ProductId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            OrderId = 2,
+                            ProductId = 5
+                        },
+                        new
+                        {
+                            Id = 4,
+                            OrderId = 3,
+                            ProductId = 4
+                        },
+                        new
+                        {
+                            Id = 5,
+                            OrderId = 4,
+                            ProductId = 3
+                        });
+                });
+
             modelBuilder.Entity("BangazonServer.Models.PaymentType", b =>
                 {
                     b.Property<int>("Id")
@@ -197,6 +250,9 @@ namespace BangazonServer.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int?>("OrderId")
+                        .HasColumnType("integer");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("numeric");
 
@@ -204,6 +260,8 @@ namespace BangazonServer.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
 
                     b.HasIndex("VendorId");
 
@@ -335,21 +393,6 @@ namespace BangazonServer.Migrations
                         });
                 });
 
-            modelBuilder.Entity("OrderProduct", b =>
-                {
-                    b.Property<int>("OrdersId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("ProductsId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("OrdersId", "ProductsId");
-
-                    b.HasIndex("ProductsId");
-
-                    b.ToTable("OrderProduct");
-                });
-
             modelBuilder.Entity("BangazonServer.Models.Category", b =>
                 {
                     b.HasOne("BangazonServer.Models.Product", null)
@@ -370,6 +413,10 @@ namespace BangazonServer.Migrations
 
             modelBuilder.Entity("BangazonServer.Models.Product", b =>
                 {
+                    b.HasOne("BangazonServer.Models.Order", null)
+                        .WithMany("Products")
+                        .HasForeignKey("OrderId");
+
                     b.HasOne("BangazonServer.Models.User", "Vendor")
                         .WithMany("Products")
                         .HasForeignKey("VendorId")
@@ -379,19 +426,9 @@ namespace BangazonServer.Migrations
                     b.Navigation("Vendor");
                 });
 
-            modelBuilder.Entity("OrderProduct", b =>
+            modelBuilder.Entity("BangazonServer.Models.Order", b =>
                 {
-                    b.HasOne("BangazonServer.Models.Order", null)
-                        .WithMany()
-                        .HasForeignKey("OrdersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BangazonServer.Models.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("BangazonServer.Models.Product", b =>
