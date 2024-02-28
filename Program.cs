@@ -18,6 +18,18 @@ builder.Services.Configure<JsonOptions>(options =>
     options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 });
 
+// CORS Configuration 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin",
+        builder =>
+        {
+            builder.WithOrigins("http://localhost:3000")
+                   .AllowAnyHeader()
+                   .AllowAnyMethod();
+        });
+});
+
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -33,6 +45,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("AllowSpecificOrigin");
 app.UseHttpsRedirection();
 
 // GET All Products
@@ -115,13 +128,11 @@ app.MapGet("api/user/{vendorId}/vendor-orders", (BangazonServerDbContext db, int
     }
     return Results.Ok(orders);
 });
-
 // GET Single Order 
 app.MapGet("api/orders/{orderId}", (BangazonServerDbContext db, int orderId) =>
 {
     return Results.Ok(db.Orders.Include(o => o.Products).SingleOrDefault(o => o.Id == orderId));
 });
-
 // CREATE Order
 app.MapPost("api/orders", (BangazonServerDbContext db, Order newOrder) =>
 {
@@ -129,7 +140,6 @@ app.MapPost("api/orders", (BangazonServerDbContext db, Order newOrder) =>
     db.SaveChanges();
     return Results.Created($"/api/orders/{newOrder.Id}", newOrder);
 });
-
 // UPDATE Order
 app.MapPut("api/orders/{orderId}", (BangazonServerDbContext db, Order order, int orderId) =>
 {
@@ -145,7 +155,6 @@ app.MapPut("api/orders/{orderId}", (BangazonServerDbContext db, Order order, int
     db.SaveChanges();
     return Results.Ok();
 });
-
 // ADD Product to Order
 app.MapPost("api/orders/add-product", (BangazonServerDbContext db, OrderProductDto orderProduct) =>
 { 
@@ -161,7 +170,6 @@ app.MapPost("api/orders/add-product", (BangazonServerDbContext db, OrderProductD
         db.SaveChanges();
         return Results.Ok();
 });
-
 // DELETE Product from Order
 app.MapDelete("api/orders/{orderId}/delete-product/{productId}", (BangazonServerDbContext db, int orderId, int productId) =>
 {
@@ -176,6 +184,80 @@ app.MapDelete("api/orders/{orderId}/delete-product/{productId}", (BangazonServer
     currentOrder.Products.Remove(removeProduct);
     db.SaveChanges();
     return Results.Ok();
+});
+// Check User
+app.MapPost("api/checkuser/{uid}", (BangazonServerDbContext db, string uid) =>
+{
+    User checkUser = db.Users.FirstOrDefault(u => u.Uid == uid);
+    if (checkUser == null) 
+    {
+        return Results.NotFound();
+    }
+    return Results.Ok(checkUser);
+});
+// GET All Users
+app.MapGet("api/users", (BangazonServerDbContext db) =>
+{
+    var users = db.Users.ToList();
+    return Results.Ok(users);
+});
+// GET Single User
+app.MapGet("api/user/{id}", (BangazonServerDbContext db, int id) =>
+{
+    var singleUser = db.Users.SingleOrDefault(u => u.Id == id);
+    if (singleUser == null)
+    {
+        return Results.NotFound();
+    }
+    return Results.Ok(singleUser);
+});
+// GET Vendors 
+app.MapGet("api/vendors", (BangazonServerDbContext db) =>
+{
+    var allVendors = db.Users
+    .Include(p => p.Products)
+    .Where(u => u.IsVendor == true)
+    .ToList();
+    if (allVendors == null)
+    {
+        return Results.NotFound();
+    }
+    return Results.Ok(allVendors);
+});
+// CREATE User
+app.MapPost("api/users", (BangazonServerDbContext db, User newUser) =>
+{
+    db.Users.Add(newUser);
+    db.SaveChanges();
+    return Results.Ok(newUser);
+});
+// UPDATE User
+app.MapPut("api/users/{id}", (BangazonServerDbContext db, int id, User user) =>
+{
+    User userToUpdate = db.Users.SingleOrDefault(u => u.Id == id);
+    if (userToUpdate == null)
+    {
+        return Results.NotFound();
+    }
+    userToUpdate.Username = user.Username;
+    userToUpdate.FirstName = user.FirstName;
+    userToUpdate.LastName = user.LastName;
+    userToUpdate.Email = user.Email;
+    userToUpdate.IsVendor = user.IsVendor;
+    db.SaveChanges();
+    return Results.NoContent();
+});
+// GET Payment Types
+app.MapGet("api/payment-types", (BangazonServerDbContext db) =>
+{
+    var paymentTypes = db.PaymentTypes.ToList();
+    return Results.Ok(paymentTypes);
+});
+// GET Categories
+app.MapGet("api/categories", (BangazonServerDbContext db) =>
+{
+    var categories = db.Categories.ToList();
+    return Results.Ok(categories);
 });
 
 app.Run();

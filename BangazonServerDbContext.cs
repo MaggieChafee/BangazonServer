@@ -23,7 +23,7 @@ using Microsoft.Extensions.Options;
             
             modelBuilder.Entity<User>().HasData(new User[]
             {
-                new User {Id = 1, Uid = "judi73nv90p89", Username = "magsbags", FirstName = "Maggie", LastName = "Chafee", Email = "myemail@gmail.com", IsVendor = false},
+                new User {Id = 1, Uid = "xADM7ueUqUY7CPPNTjxpUQfgzNu2", Username = "magsbags", FirstName = "Maggie", LastName = "Chafee", Email = "myemail@gmail.com", IsVendor = false},
                 new User {Id = 2, Uid = "sdii73n390p89", Username = "lucky_stars_stitches", FirstName = "Natalie", LastName = "Mays", Email = "natalie.m@me.com", IsVendor = true},
                 new User {Id = 3, Uid = "cXdi4knv90p45", Username = "jayRude88", FirstName = "Jason", LastName = "Peterson", Email = "jayrude@yahoo.com", IsVendor = false},
             });
