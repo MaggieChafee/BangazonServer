@@ -186,10 +186,10 @@ app.MapDelete("api/orders/{orderId}/delete-product/{productId}", (BangazonServer
     return Results.Ok();
 });
 // Check User
-app.MapPost("api/checkuser/{uid}", (BangazonServerDbContext db, string uid) =>
+app.MapGet("api/checkuser/{uid}", (BangazonServerDbContext db, string uid) =>
 {
-    User checkUser = db.Users.FirstOrDefault(u => u.Uid == uid);
-    if (checkUser == null) 
+    var checkUser = db.Users.Where(x => x.Uid == uid).ToList();
+    if (uid == null) 
     {
         return Results.NotFound();
     }
@@ -225,11 +225,11 @@ app.MapGet("api/vendors", (BangazonServerDbContext db) =>
     return Results.Ok(allVendors);
 });
 // CREATE User
-app.MapPost("api/users", (BangazonServerDbContext db, User newUser) =>
+app.MapPost("api/register", (BangazonServerDbContext db, User newUser) =>
 {
     db.Users.Add(newUser);
     db.SaveChanges();
-    return Results.Ok(newUser);
+    return Results.Created($"api/user/{newUser.Id}", newUser);
 });
 // UPDATE User
 app.MapPut("api/users/{id}", (BangazonServerDbContext db, int id, User user) =>

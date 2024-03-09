@@ -8,6 +8,7 @@ namespace BangazonServer.Models
         public string Name { get; set; }
         [Required]
         public string Description { get; set; }
+        public string Image { get; set; }
         public decimal Price { get; set; }
         public bool IsAvailable { get; set; }
         public DateTime DateCreated { get; set; }
